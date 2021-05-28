@@ -53,6 +53,13 @@ void Ball_Way()
             y = 0;
             }
 
-        txSleep (500);
+        if (txGetAsyncKeyState (VK_RIGHT)) vx++;
+        if (txGetAsyncKeyState (VK_LEFT))  vx--;
+        if (txGetAsyncKeyState (VK_UP))    vy--;
+        if (txGetAsyncKeyState (VK_DOWN))  vy++;
+
+        if (txGetAsyncKeyState (VK_SPACE)) vx = vy = 0;
+
+        txSleep (10);
         }
     }
