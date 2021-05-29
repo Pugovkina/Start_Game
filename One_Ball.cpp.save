@@ -24,9 +24,6 @@ void Ball_Way()
 
      while (! txGetAsyncKeyState (VK_ESCAPE))
         {
-        txSetColor (RGB (x, y, 128), 2);
-        txSetFillColor (RGB (x/3, y/3, 128));
-
         txCircle (x, y, 20);
 
         x += vx * dt;
