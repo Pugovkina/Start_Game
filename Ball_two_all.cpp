@@ -2,7 +2,7 @@
 #include "TXLib.h"
 
 void Ball_two_way();
-void Ball_draw (int  x, int  y, int  vx, int  vy, COLORREF color, COLORREF fillcolor);
+void Ball_draw (int  x, int  y, int r, int  vx, int  vy, COLORREF color, COLORREF fillcolor);
 void Ball_way  (int* x, int* y, int r, int* vx, int* vy, int ax, int ay, int dt);
 void Ball_Control (int* vx, int* vy);
 
@@ -33,8 +33,9 @@ void Ball_two_way()
 
      while (! txGetAsyncKeyState (VK_ESCAPE))
         {
-        Ball_draw (x1, y1, vx1, vy1, TX_LIGHTRED,   TX_RED);
-        Ball_draw (x2, y2, vx2, vy2, TX_LIGHTGREEN, TX_GREEN);
+        txClear ();
+        Ball_draw (x1, y1, r1, vx1, vy1, TX_LIGHTRED,   TX_RED);
+        Ball_draw (x2, y2, r2, vx2, vy2, TX_LIGHTGREEN, TX_GREEN);
 
         Ball_way (&x1, &y1, r1, &vx1, &vy1, ax1, ay1, dt);
         Ball_way (&x2, &y2, r2, &vx2, &vy2, ax2, ay2, dt);
@@ -47,12 +48,12 @@ void Ball_two_way()
 
 //-----------------------------------------------------------------
 
-void Ball_draw (int x, int y, int vx, int vy, COLORREF color, COLORREF fillcolor)
+void Ball_draw (int x, int y, int r, int vx, int vy, COLORREF color, COLORREF fillcolor)
     {
     txSetColor (color, 2);
     txSetFillColor (fillcolor);
 
-    txCircle (x, y, 20);
+    txCircle (x, y, r);
 
     txLine (x, y, x + vx*5, y + vy*5);
     txCircle (x + vx*5, y+ vy*5, 3);
@@ -97,10 +98,10 @@ void Ball_way (int* x, int* y, int r, int* vx, int* vy, int ax, int ay, int dt)
 
 void Ball_Control (int* vx, int* vy)
    {
-   if (txGetAsyncKeyState (VK_RIGHT)) (*vx)++;
-   if (txGetAsyncKeyState (VK_LEFT))  (*vx)--;
-   if (txGetAsyncKeyState (VK_UP))    (*vy)--;
-   if (txGetAsyncKeyState (VK_DOWN))   *vy = *vx + 1;
+   if (txGetAsyncKeyState (VK_RIGHT)) {(*vx) ++;}
+   if (txGetAsyncKeyState (VK_LEFT))  {(*vx) --;}
+   if (txGetAsyncKeyState (VK_UP))    {(*vy) --;}
+   if (txGetAsyncKeyState (VK_DOWN))  { *vy = *vx + 1;}
 
-   if (txGetAsyncKeyState (VK_SPACE)) *vx = *vy = 0;
+   if (txGetAsyncKeyState (VK_SPACE)) { *vx = *vy = 0;}
    }
