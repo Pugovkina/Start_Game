@@ -10,6 +10,7 @@
 #include "TXLib.h"
 
 void Pole_for_game ();
+void Text_out ();
 void Ball_two_way();
 void Ball_draw (int  x, int  y, int r, int  vx, int  vy, COLORREF color, COLORREF fillcolor);
 void Ball_way  (int* x, int* y, int r, int* vx, int* vy, int ax, int ay, int dt);
@@ -37,7 +38,20 @@ void Pole_for_game ()
 
     txSetColor     (RGB (0, 213, 106));
     txSetFillColor (RGB (0, 174,  87));
-    txRectangle (0,                   0, txGetExtentX(),             80);
+    txRectangle (0, 0, txGetExtentX(), 80);
+
+    Text_out ();
+    }
+
+//-----------------------------------------------------------------
+
+void Text_out ()
+    {
+    txSetColor (TX_BLACK);
+
+    txSelectFont ("Arial", 30);
+
+    txTextOut (20, 30, "Koli4stvo ydarov: ");
     }
 
 //-----------------------------------------------------------------
@@ -45,7 +59,7 @@ void Pole_for_game ()
 void Ball_two_way()
     {
      int x1  = 100, y1  = 100,
-         vx1 = 5,   vy1 = 3, r1 = 10,
+         vx1 = 5,   vy1 = 3, r1 = 15,
          ax1 = 0,   ay1 = 1;
 
      int x2  = 400, y2  = 400,
@@ -60,8 +74,8 @@ void Ball_two_way()
 
         Pole_for_game();
 
-        Ball_draw (x1, y1, r1, vx1, vy1, TX_LIGHTRED,   TX_RED);
-        Ball_draw (x2, y2, r2, vx2, vy2, TX_LIGHTGREEN, TX_GREEN);
+        Ball_draw (x1, y1, r1, vx1, vy1, RGB (170, 170,   0), RGB (255, 255,  15));
+        Ball_draw (x2, y2, r2, vx2, vy2, RGB (128,   0, 255), RGB (190, 130, 255));
 
         Ball_way (&x1, &y1, r1, &vx1, &vy1, ax1, ay1, dt);
         Ball_way (&x2, &y2, r2, &vx2, &vy2, ax2, ay2, dt);
