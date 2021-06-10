@@ -18,6 +18,7 @@ void Ball_Control (int* vx, int* vy);
 void Znachenia_out (int* znach, int x, int y);
 
 double Distanse (double x1, double y1, double x2, double y2);
+int Koli4stvo_zhizni (int* ydar);
 
 //-----------------------------------------------------------------
 
@@ -106,12 +107,20 @@ void Ball_two_way()
 
         Znachenia_out (&ydar, 250, 28);
 
+        int zhizn = Koli4stvo_zhizni (&ydar);
+
+        Znachenia_out (&zhizn, 250, 550);
+
+        if (zhizn == 0)
+            {
+            Text_out (70, 230, 50, "Igra zakonchena");
+            break;
+            }
+
         Ball_Control (&vx1, &vy1);
 
         txSleep (50);
         }
-
-    Text_out (70, 230, 50, "Igra zakonchena");
     }
 
 //-----------------------------------------------------------------
@@ -176,11 +185,15 @@ void Ball_Control (int* vx, int* vy)
 
 //-----------------------------------------------------------------
 
-//void Koli4stvo_zhizni ()
-//    {
-//    Zhizn = 0;
+int Koli4stvo_zhizni (int* ydar)
+    {
+    int zhizn = 5;
+    int k = zhizn;
 
-//    }
+    if (*ydar/3 == 0) k --;
+
+    return  zhizn;
+    }
 
 //-----------------------------------------------------------------
 

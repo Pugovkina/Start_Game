@@ -18,6 +18,7 @@ void Ball_Control (int* vx, int* vy);
 void Znachenia_out (int* znach, int x, int y);
 
 double Distanse (double x1, double y1, double x2, double y2);
+int Koli4stvo_zhizni (int* ydar);
 
 //-----------------------------------------------------------------
 
@@ -65,7 +66,7 @@ void Znachenia_out (int* znach, int x, int y)
     {
     char strZnach[10] = "";
     sprintf (strZnach, "%d", *znach);
-    
+
     txSetColor (TX_BLACK);
     txSelectFont ("Arial", 30);
     txTextOut (x,  y, strZnach);
@@ -77,7 +78,7 @@ void Znachenia_out (int* znach, int x, int y)
 void Ball_two_way()
     {
      int ydar = 0;
-     
+
      int x1  = 100, y1  = 100,
          vx1 = 5,   vy1 = 3, r1 = 15,
          ax1 = 0,   ay1 = 1;
@@ -101,17 +102,25 @@ void Ball_two_way()
         Ball_way (&x2, &y2, r2, &vx2, &vy2, ax2, ay2, dt);
 
         double dist = Distanse (x1, y1, x2, y2);
-        
+
         if (dist <= r1 + r2) ydar = ydar + 1;
-        
-        Znachenia_out (&ydar, int x, int y);
-        
+
+        Znachenia_out (&ydar, 250, 28);
+
+        int zhizn = Koli4stvo_zhizni (&ydar);
+
+        Znachenia_out (&zhizn, 250, 550);
+
+        if (zhizn == 0)
+            {
+            Text_out (70, 230, 50, "Igra zakonchena");
+            break;
+            }
+
         Ball_Control (&vx1, &vy1);
 
         txSleep (50);
         }
-
-    Text_out (70, 230, 50, "Igra zakonchena");
     }
 
 //-----------------------------------------------------------------
@@ -176,11 +185,15 @@ void Ball_Control (int* vx, int* vy)
 
 //-----------------------------------------------------------------
 
-//void Koli4stvo_zhizni ()
-//    {
-//    Zhizn = 0;
+int Koli4stvo_zhizni (int* ydar)
+    {
+    int zhizn = 5;
+    int k = zhizn;
+    
+    if (*ydar/3 == 0) k --;
 
-//    }
+    return  zhizn;
+    }
 
 //-----------------------------------------------------------------
 
@@ -189,7 +202,7 @@ void Ball_Control (int* vx, int* vy)
 double Distanse (double x1, double y1, double x2, double y2)
     {
     double dist = sqrt ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-    
+
     return dist;
     }
 
