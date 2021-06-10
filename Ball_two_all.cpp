@@ -10,11 +10,14 @@
 #include "TXLib.h"
 
 void Pole_for_game ();
-void Text_out ();
+void Text_out (int x, int y, int size_text, char text[24]);
 void Ball_two_way();
 void Ball_draw (int  x, int  y, int r, int  vx, int  vy, COLORREF color, COLORREF fillcolor);
 void Ball_way  (int* x, int* y, int r, int* vx, int* vy, int ax, int ay, int dt);
 void Ball_Control (int* vx, int* vy);
+void Znachenia_out (int* znach, int x, int y);
+
+double Distanse (double x1, double y1, double x2, double y2);
 
 //-----------------------------------------------------------------
 
@@ -38,26 +41,43 @@ void Pole_for_game ()
 
     txSetColor     (RGB (0, 213, 106));
     txSetFillColor (RGB (0, 174,  87));
-    txRectangle (0, 0, txGetExtentX(), 80);
+    txRectangle (0,                   0, txGetExtentX(),             80);
+    txRectangle (0, txGetExtentY() - 60, txGetExtentX(), txGetExtentY());
 
-    Text_out ();
+    Text_out (20,  28, 30, "Koli4stvo stolknovenii: ");
+    Text_out (20, 550, 30, "Koli4stvo zhizni: ");
     }
 
 //-----------------------------------------------------------------
 
-void Text_out ()
+void Text_out (int x, int y, int size_text, char text[25])
     {
     txSetColor (TX_BLACK);
 
-    txSelectFont ("Arial", 30);
+    txSelectFont ("Arial", size_text);
 
-    txTextOut (20, 30, "Koli4stvo ydarov: ");
+    txTextOut (x,  y, text);
     }
+
+//-----------------------------------------------------------------
+
+void Znachenia_out (int* znach, int x, int y)
+    {
+    char strZnach[10] = "";
+    sprintf (strZnach, "%d", *znach);
+
+    txSetColor (TX_BLACK);
+    txSelectFont ("Arial", 30);
+    txTextOut (x,  y, strZnach);
+    }
+
 
 //-----------------------------------------------------------------
 
 void Ball_two_way()
     {
+     int ydar = 0;
+
      int x1  = 100, y1  = 100,
          vx1 = 5,   vy1 = 3, r1 = 15,
          ax1 = 0,   ay1 = 1;
@@ -80,10 +100,18 @@ void Ball_two_way()
         Ball_way (&x1, &y1, r1, &vx1, &vy1, ax1, ay1, dt);
         Ball_way (&x2, &y2, r2, &vx2, &vy2, ax2, ay2, dt);
 
+        double dist = Distanse (x1, y1, x2, y2);
+
+        if (dist <= r1 + r2) ydar = ydar + 1;
+
+        Znachenia_out (&ydar, 250, 28);
+
         Ball_Control (&vx1, &vy1);
 
         txSleep (50);
         }
+
+    Text_out (70, 230, 50, "Igra zakonchena");
     }
 
 //-----------------------------------------------------------------
@@ -115,10 +143,10 @@ void Ball_way (int* x, int* y, int r, int* vx, int* vy, int ax, int ay, int dt)
        *x  = 400 - r;
        }
 
-    if (*y > 600 - r)
+    if (*y > 540 - r)
        {
        *vy = - *vy;
-       *y = 600 - r;
+       *y = 540 - r;
        }
 
     if (*x < 0 + r)
@@ -138,10 +166,31 @@ void Ball_way (int* x, int* y, int r, int* vx, int* vy, int ax, int ay, int dt)
 
 void Ball_Control (int* vx, int* vy)
    {
-   if (txGetAsyncKeyState (VK_RIGHT)) {(*vx) ++;}
-   if (txGetAsyncKeyState (VK_LEFT))  {(*vx) --;}
-   if (txGetAsyncKeyState (VK_UP))    {(*vy) --;}
-   if (txGetAsyncKeyState (VK_DOWN))  { *vy = *vx + 1;}
+   if (txGetAsyncKeyState (VK_RIGHT)) (*vx) ++;
+   if (txGetAsyncKeyState (VK_LEFT))  (*vx) --;
+   if (txGetAsyncKeyState (VK_UP))    (*vy) --;
+   if (txGetAsyncKeyState (VK_DOWN))   *vy = *vx + 1;
 
-   if (txGetAsyncKeyState (VK_SPACE)) { *vx = *vy = 0;}
+   if (txGetAsyncKeyState (VK_SPACE))  *vx = *vy = 0;
    }
+
+//-----------------------------------------------------------------
+
+//void Koli4stvo_zhizni ()
+//    {
+//    Zhizn = 0;
+
+//    }
+
+//-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+
+double Distanse (double x1, double y1, double x2, double y2)
+    {
+    double dist = sqrt ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+
+    return dist;
+    }
+
+//-----------------------------------------------------------------
