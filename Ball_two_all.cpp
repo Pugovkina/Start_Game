@@ -12,8 +12,8 @@
 void Pole_for_game ();
 void Text_out (int x, int y, int size_text, char text[24]);
 void Ball_two_way();
-void Ball_draw (int  x, int  y, int r, int  vx, int  vy, COLORREF color, COLORREF fillcolor);
-void Ball_way  (int* x, int* y, int r, int* vx, int* vy, int ax, int ay, int dt);
+void Ball_draw (int  x, int  y, int  vx, int  vy, int r, COLORREF color, COLORREF fillcolor);
+void Ball_way  (int* x, int* y, int* vx, int* vy, int r, int ax, int ay, int dt);
 void Ball_Control (int* vx, int* vy);
 void Znachenia_out (int* znach, int x, int y);
 
@@ -75,17 +75,31 @@ void Znachenia_out (int* znach, int x, int y)
 
 //-----------------------------------------------------------------
 
+struct Ball
+    {
+    int  x,  y,
+        vx, vy;
+
+    int radius;
+    };
+
+//-----------------------------------------------------------------
+
 void Ball_two_way()
     {
      int ydar = 0;
 
-     int x1  = 100, y1  = 100,
-         vx1 = 5,   vy1 = 3, r1 = 15,
-         ax1 = 0,   ay1 = 1;
+     Ball ball1 = {.x = 100, .y = 100, .vx = 5, .vy = 3, .radius = 15};
 
-     int x2  = 400, y2  = 400,
-         vx2 = 8,   vy2 = 5, r2 = 15,
-         ax2 = 0,   ay2 = 1;
+     Ball ball2 = {400, 400, 8, 5, 15};
+
+     /*int x1  = 100, y1  = 100,
+         vx1 = 5,   vy1 = 3, r1 = 15,*/
+
+    /* int x2  = 400, y2  = 400,
+         vx2 = 8,   vy2 = 5, r2 = 15,*/
+
+     int ax = 2, ay = 1;
 
      int dt = 1;
 
@@ -95,11 +109,11 @@ void Ball_two_way()
 
         Pole_for_game();
 
-        Ball_draw (x1, y1, r1, vx1, vy1, RGB (170, 170,   0), RGB (255, 255,  15));
-        Ball_draw (x2, y2, r2, vx2, vy2, RGB (128,   0, 255), RGB (190, 130, 255));
+        Ball_draw (ball1, RGB (170, 170,   0), RGB (255, 255,  15));
+        Ball_draw (ball2, RGB (128,   0, 255), RGB (190, 130, 255));
 
-        Ball_way (&x1, &y1, r1, &vx1, &vy1, ax1, ay1, dt);
-        Ball_way (&x2, &y2, r2, &vx2, &vy2, ax2, ay2, dt);
+        Ball_way (&ball1, ax, ay, dt);
+        Ball_way (&ball2, ax, ay, dt);
 
         double dist = Distanse (x1, y1, x2, y2);
 
@@ -125,7 +139,7 @@ void Ball_two_way()
 
 //-----------------------------------------------------------------
 
-void Ball_draw (int x, int y, int r, int vx, int vy, COLORREF color, COLORREF fillcolor)
+void Ball_draw (int x, int y, int vx, int vy, int r, COLORREF color, COLORREF fillcolor)
     {
     txSetColor (color, 2);
     txSetFillColor (fillcolor);
@@ -138,7 +152,7 @@ void Ball_draw (int x, int y, int r, int vx, int vy, COLORREF color, COLORREF fi
 
 //-----------------------------------------------------------------
 
-void Ball_way (int* x, int* y, int r, int* vx, int* vy, int ax, int ay, int dt)
+void Ball_way (int* x, int* y, int* vx, int* vy, int r, int ax, int ay, int dt)
     {
     *vx = *vx + ax * dt;
     *vy = *vy + ay * dt;
