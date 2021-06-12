@@ -12,8 +12,10 @@
 void Pole_for_game ();
 void Text_out (int x, int y, int size_text, char text[24]);
 void Ball_two_way();
-void Ball_draw (int  x, int  y, int  vx, int  vy, int r, COLORREF color, COLORREF fillcolor);
-void Ball_way  (int* x, int* y, int* vx, int* vy, int r, int ax, int ay, int dt);
+
+void Ball_draw (Ball ball, COLORREF color, COLORREF fillcolor);
+
+void Ball_way  (int* x, int* y, int* vx, int* vy, int radius, int ax, int ay, int dt);
 void Ball_Control (int* vx, int* vy);
 void Znachenia_out (int* znach, int x, int y);
 
@@ -89,7 +91,7 @@ void Ball_two_way()
     {
      int ydar = 0;
 
-     Ball ball1 = {.x = 100, .y = 100, .vx = 5, .vy = 3, .radius = 15};
+     Ball ball1 = {100, 100, 5, 3, 15};
 
      Ball ball2 = {400, 400, 8, 5, 15};
 
@@ -115,9 +117,9 @@ void Ball_two_way()
         Ball_way (&ball1, ax, ay, dt);
         Ball_way (&ball2, ax, ay, dt);
 
-        double dist = Distanse (x1, y1, x2, y2);
+        double dist = Distanse (ball1.x, ball1.y, ball2.x, ball2.y);
 
-        if (dist <= r1 + r2) ydar = ydar + 1;
+        if (dist <= ball1.radius + ball2.radius) ydar = ydar + 1;
 
         Znachenia_out (&ydar, 250, 28);
 
@@ -131,7 +133,7 @@ void Ball_two_way()
             break;
             }
 
-        Ball_Control (&vx1, &vy1);
+        Ball_Control (&ball1.vx, &ball1.vy);
 
         txSleep (50);
         }
@@ -139,12 +141,12 @@ void Ball_two_way()
 
 //-----------------------------------------------------------------
 
-void Ball_draw (int x, int y, int vx, int vy, int r, COLORREF color, COLORREF fillcolor)
+void Ball_draw (Ball ball, COLORREF color, COLORREF fillcolor)
     {
     txSetColor (color, 2);
     txSetFillColor (fillcolor);
 
-    txCircle (x, y, r);
+    txCircle (x, y, radius);
 
     txLine (x, y, x + vx*3, y + vy*3);
     txCircle (x + vx*3, y+ vy*3, 2);
