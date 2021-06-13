@@ -13,9 +13,10 @@ void Pole_for_game ();
 void Text_out (int x, int y, int size_text, char text[24]);
 void Ball_two_way();
 
-void Ball_draw (Ball ball, COLORREF color, COLORREF fillcolor);
+void Ball_draw (struct Ball ball, COLORREF color, COLORREF fillcolor);
 
-void Ball_way  (int* x, int* y, int* vx, int* vy, int radius, int ax, int ay, int dt);
+void Ball_way  (struct Ball *, int ax, int ay, int dt);
+
 void Ball_Control (int* vx, int* vy);
 void Znachenia_out (int* znach, int x, int y);
 
@@ -91,9 +92,9 @@ void Ball_two_way()
     {
      int ydar = 0;
 
-     Ball ball1 = {100, 100, 5, 3, 15};
+     struct Ball ball1 = {100, 100, 5, 3, 15};
 
-     Ball ball2 = {400, 400, 8, 5, 15};
+     struct Ball ball2 = {400, 400, 8, 5, 15};
 
      /*int x1  = 100, y1  = 100,
          vx1 = 5,   vy1 = 3, r1 = 15,*/
@@ -141,49 +142,50 @@ void Ball_two_way()
 
 //-----------------------------------------------------------------
 
-void Ball_draw (Ball ball, COLORREF color, COLORREF fillcolor)
+void Ball_draw (struct Ball ball, COLORREF color, COLORREF fillcolor)
     {
     txSetColor (color, 2);
     txSetFillColor (fillcolor);
 
-    txCircle (x, y, radius);
+    txCircle (ball.x, ball.y, ball.radius);
 
-    txLine (x, y, x + vx*3, y + vy*3);
-    txCircle (x + vx*3, y+ vy*3, 2);
+    txLine (ball.x, ball.y, ball.x + ball.vx*3, ball.y + ball.vy*3);
+
+    txCircle (ball.x + ball.vx*3, ball.y+ ball.vy*3, 2);
     }
 
 //-----------------------------------------------------------------
 
-void Ball_way (int* x, int* y, int* vx, int* vy, int r, int ax, int ay, int dt)
+void Ball_way (struct Ball *ball, int ax, int ay, int dt)
     {
-    *vx = *vx + ax * dt;
-    *vy = *vy + ay * dt;
+    ball -> vx = ball -> vx + ax * dt;
+    ball -> vy = ball -> vy + ay * dt;
 
-    *x = *x + *vx * dt;
-    *y = *y + *vy * dt;
+    ball -> x = ball -> x + (ball -> vx) * dt;
+    ball -> y = ball -> y + (ball -> vy) * dt;
 
-    if (*x > 400 - r)
+    if (ball -> x > 400 - (ball -> radius))
        {
-       *vx = - *vx;
-       *x  = 400 - r;
+       ball -> vx = - (ball -> vx);
+       ball -> x  = 400 - (ball -> radius);
        }
 
-    if (*y > 540 - r)
+    if (ball -> y > 540 - (ball -> radius))
        {
-       *vy = - *vy;
-       *y = 540 - r;
+       ball -> vy = - (ball -> vy);
+       ball -> y = 540 - (ball -> radius);
        }
 
-    if (*x < 0 + r)
+    if (ball -> x < 0 + (ball -> radius))
        {
-       *vx = - *vx;
-       *x = 0 + r;
+       ball -> vx = - (ball -> vx);
+       ball -> x = 0 + (ball -> radius);
        }
 
-    if (*y < 0 + r)
+    if (ball -> y < 0 + (ball -> radius))
        {
-       *vy = - *vy;
-       *y = 0 + r;
+       ball -> vy = - (ball -> vy);
+       ball -> y = 0 + (ball -> radius);
        }
     }
 

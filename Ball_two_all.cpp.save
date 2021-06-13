@@ -13,9 +13,10 @@ void Pole_for_game ();
 void Text_out (int x, int y, int size_text, char text[24]);
 void Ball_two_way();
 
-void Ball_draw (int x, int y, int vx, int vy, int radius, COLORREF color, COLORREF fillcolor);
+void Ball_draw (struct Ball moolah, COLORREF color, COLORREF fillcolor);
 
-void Ball_way  (int* x, int* y, int* vx, int* vy, int radius, int ax, int ay, int dt);
+void Ball_way  (const struct Ball *, int ax, int ay, int dt);
+
 void Ball_Control (int* vx, int* vy);
 void Znachenia_out (int* znach, int x, int y);
 
@@ -91,9 +92,9 @@ void Ball_two_way()
     {
      int ydar = 0;
 
-     Ball ball1 = {100, 100, 5, 3, 15};
+     struct Ball ball1 = {100, 100, 5, 3, 15};
 
-     Ball ball2 = {400, 400, 8, 5, 15};
+     struct Ball ball2 = {400, 400, 8, 5, 15};
 
      /*int x1  = 100, y1  = 100,
          vx1 = 5,   vy1 = 3, r1 = 15,*/
@@ -141,26 +142,27 @@ void Ball_two_way()
 
 //-----------------------------------------------------------------
 
-void Ball_draw (int x, int y, int vx, int vy, int radius, COLORREF color, COLORREF fillcolor)
+void Ball_draw (struct Ball moolah, COLORREF color, COLORREF fillcolor)
     {
     txSetColor (color, 2);
     txSetFillColor (fillcolor);
 
-    txCircle (x, y, radius);
+    txCircle (moolah.x, moolah.y, moolah.radius);
 
-    txLine (x, y, x + vx*3, y + vy*3);
-    txCircle (x + vx*3, y+ vy*3, 2);
+    txLine (moolah.x, moolah.y, moolah.x + moolah.vx*3, moolah.y + moolah.vy*3);
+
+    txCircle (moolah.x + moolah.vx*3, moolah.y+ moolah.vy*3, 2);
     }
 
 //-----------------------------------------------------------------
 
-void Ball_way (int* x, int* y, int* vx, int* vy, int r, int ax, int ay, int dt)
+void Ball_way (const struct Ball * ball, int r, int ax, int ay, int dt)
     {
-    *vx = *vx + ax * dt;
-    *vy = *vy + ay * dt;
+    (*ball).vx = (*ball).vx + ax * dt;
+    (*ball).vy = (*ball).vy + ay * dt;
 
-    *x = *x + *vx * dt;
-    *y = *y + *vy * dt;
+    (*ball).x = (*ball).x + (*ball).vx * dt;
+    (*ball).y = (*ball).y + (*ball).vy * dt;
 
     if (*x > 400 - r)
        {
