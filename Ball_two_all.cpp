@@ -10,18 +10,28 @@
 #include "TXLib.h"
 
 void Pole_for_game ();
-void Text_out (int x, int y, int size_text, char text[24]);
+void Text_out (int x, int y, int size_text, const char text[24]);
 void Ball_two_way();
 
 void Ball_draw (struct Ball ball, COLORREF color, COLORREF fillcolor);
 
-void Ball_way  (struct Ball *, int ax, int ay, int dt);
+void Ball_way  (struct Ball *, double ax, double ay, double dt);
 
-void Ball_Control (int* vx, int* vy);
+void Ball_Control (double* vx, double* vy);
 void Znachenia_out (int* znach, int x, int y);
 
 double Distanse (double x1, double y1, double x2, double y2);
 int Koli4stvo_zhizni (int* ydar);
+
+//-----------------------------------------------------------------
+
+struct Ball
+    {
+    double  x,  y,
+           vx, vy;
+
+    int    radius;
+    };
 
 //-----------------------------------------------------------------
 
@@ -54,7 +64,7 @@ void Pole_for_game ()
 
 //-----------------------------------------------------------------
 
-void Text_out (int x, int y, int size_text, char text[25])
+void Text_out (int x, int y, int size_text, const char text[])
     {
     txSetColor (TX_BLACK);
 
@@ -75,36 +85,21 @@ void Znachenia_out (int* znach, int x, int y)
     txTextOut (x,  y, strZnach);
     }
 
-
-//-----------------------------------------------------------------
-
-struct Ball
-    {
-    int  x,  y,
-        vx, vy;
-
-    int radius;
-    };
-
 //-----------------------------------------------------------------
 
 void Ball_two_way()
     {
-     int ydar = 0;
+     int n_ydar = 0;
 
      struct Ball ball1 = {100, 100, 5, 3, 15};
 
      struct Ball ball2 = {400, 400, 8, 5, 15};
 
-     /*int x1  = 100, y1  = 100,
-         vx1 = 5,   vy1 = 3, r1 = 15,*/
+     double ax = 0, ay = 0;
 
-    /* int x2  = 400, y2  = 400,
-         vx2 = 8,   vy2 = 5, r2 = 15,*/
+     double dt = 1;
 
-     int ax = 2, ay = 1;
-
-     int dt = 1;
+     bool old_ydar = false;
 
      while (! txGetAsyncKeyState (VK_ESCAPE))
         {
@@ -120,11 +115,17 @@ void Ball_two_way()
 
         double dist = Distanse (ball1.x, ball1.y, ball2.x, ball2.y);
 
-        if (dist <= ball1.radius + ball2.radius) ydar = ydar + 1;
+        bool ydar = false;
 
-        Znachenia_out (&ydar, 250, 28);
+        if (dist <= ball1.radius + ball2.radius) ydar = true;
 
-        int zhizn = Koli4stvo_zhizni (&ydar);
+        if (old_ydar == false && ydar == true) n_ydar = n_ydar + 1;
+
+        old_ydar = ydar;
+
+        Znachenia_out (&n_ydar, 250, 28);
+
+       /* int zhizn = Koli4stvo_zhizni (&ydar);
 
         Znachenia_out (&zhizn, 250, 550);
 
@@ -132,7 +133,7 @@ void Ball_two_way()
             {
             Text_out (70, 230, 50, "Igra zakonchena");
             break;
-            }
+            }  */
 
         Ball_Control (&ball1.vx, &ball1.vy);
 
@@ -156,7 +157,7 @@ void Ball_draw (struct Ball ball, COLORREF color, COLORREF fillcolor)
 
 //-----------------------------------------------------------------
 
-void Ball_way (struct Ball *ball, int ax, int ay, int dt)
+void Ball_way (struct Ball *ball, double ax, double ay, double dt)
     {
     ball -> vx = ball -> vx + ax * dt;
     ball -> vy = ball -> vy + ay * dt;
@@ -167,31 +168,31 @@ void Ball_way (struct Ball *ball, int ax, int ay, int dt)
     if (ball -> x > 400 - (ball -> radius))
        {
        ball -> vx = - (ball -> vx);
-       ball -> x  = 400 - (ball -> radius);
+       ball -> x  = (400 - ball -> radius) - (ball -> x - (400 - ball -> radius)) * 2;
        }
 
     if (ball -> y > 540 - (ball -> radius))
        {
        ball -> vy = - (ball -> vy);
-       ball -> y = 540 - (ball -> radius);
+       ball -> y = (540 - ball -> radius) - (ball -> y - (540 - ball -> radius)) * 2;
        }
 
     if (ball -> x < 0 + (ball -> radius))
        {
        ball -> vx = - (ball -> vx);
-       ball -> x = 0 + (ball -> radius);
+       ball -> x = (0 + (ball -> radius)) + ((0 + (ball -> radius)) - (ball -> x)) * 2;
        }
 
-    if (ball -> y < 0 + (ball -> radius))
+    if (ball -> y < 80 + (ball -> radius))
        {
        ball -> vy = - (ball -> vy);
-       ball -> y = 0 + (ball -> radius);
+       ball -> y = (80 + (ball -> radius)) + ((80 + (ball -> radius)) - (ball -> y)) * 2;
        }
     }
 
 //-----------------------------------------------------------------
 
-void Ball_Control (int* vx, int* vy)
+void Ball_Control (double* vx, double* vy)
    {
    if (txGetAsyncKeyState (VK_RIGHT)) (*vx) ++;
    if (txGetAsyncKeyState (VK_LEFT))  (*vx) --;
